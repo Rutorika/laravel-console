@@ -1,0 +1,29 @@
+{
+    "name" : "rutorika/laravel-console",
+    "description" : "Store error reports in database and send them to Slack by crontab command",
+    "keywords": ["laravel", "report", "slack", "laravel55"],
+    "license" : "MIT",
+    "authors" : [
+        {
+            "name" : "Dmitry Demidovich",
+            "email" : "dmitrij.demidovich@gmail.com"
+        }
+    ],
+    "autoload" : {
+        "psr-4" : {
+            "Rutorika\\Console\\" : "src"
+        }
+    },
+    "require": {
+        "php": ">=7.0.0",
+        "laravel/framework": "5.5.*",
+        "guzzlehttp/guzzle": ">=6.3"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Rutorika\\Console\\ServiceProvider"
+            ]
+        }
+    }
+}
