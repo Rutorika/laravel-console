@@ -12,7 +12,7 @@ class UserListCommand extends Command
 
     protected $name = 'rutorika:user:list';
 
-    protected $description = 'Список пользователей';
+    protected $description = 'Find users';
 
     protected $signature = 'rutorika:user:list {--E|email= : User email or part of email} {--I|id= : User ID}';
 

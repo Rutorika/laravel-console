@@ -25,11 +25,11 @@ trait ConsoleTrait
         $value = config()->get($param);
 
         if (empty($value)) {
-            abort(500, "В конфигурации отсутствует параметр " . $param . ". Попробуйте выполнить php artisan config:clear.");
+            abort(500, sprintf('The parameter "%s" was not found in the configuration. Try it now "php artisan config:clear".', $param));
         }
 
         if (!class_exists($value)) {
-            abort(500, "Отсутствует класс модели пользователя {$value}. Проверьте параметр конфигурации {$param}");
+            abort(500, sprintd('Missing User Model Class "%s". Check the configuration parameter "%s"', $value, $param));
         }
 
         return $value;
@@ -45,13 +45,13 @@ trait ConsoleTrait
         $value = config()->get($param);
 
         if (empty($value)) {
-            abort(500, "В конфигурации отсутствует параметр " . $param . ". Попробуйте выполнить php artisan config:clear.");
+            abort(500, sprintf('The parameter "%s" was not found in the configuration. Try it now "php artisan config:clear".', $param));
         }
 
         if (!preg_match('/^[a-z\d_\\\]{1,50}$/i', $value)) {
-            abort(500, sprintf('Некорректное значение параметра конфигурации "%s" "%s"', $param, $value));
+            abort(500, sprintf('Incorect configuration parameter "%s" value "%s"', $param, $value));
         }
 
-        return $value;
+        return preg_replace(['/^\\\+/', '/\\\+$/'], ['', ''], $value);
     }
 }

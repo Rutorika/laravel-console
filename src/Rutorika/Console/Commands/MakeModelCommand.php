@@ -12,7 +12,7 @@ class MakeModelCommand extends Command
 
     protected $name = 'rutorika:make-model';
 
-    protected $description = 'Создание модели';
+    protected $description = 'Create model file from database table';
 
     protected $useSortable = false;
 
@@ -35,7 +35,7 @@ class MakeModelCommand extends Command
 
         $source = $this->makeModel($table, $columns);
 
-        file_put_contents($file, $source);
+        $this->writeModel($file, $source);
 
         $this->line("Model {$file} was created");
 
@@ -46,6 +46,17 @@ class MakeModelCommand extends Command
         }
 
         $this->line("\n");
+    }
+
+    protected function writeModel($file, $source)
+    {
+        $p = pathinfo($file);
+
+        if (!file_exists($p['dirname'])) {
+            mkdir($p['dirname'], 0777, true);
+        }
+
+        file_put_contents($file, $source);
     }
 
     protected function getTableName()
@@ -128,13 +139,17 @@ class MakeModelCommand extends Command
     protected function getModelFile($table)
     {
         $namespace = $this->getModelNamespace();
+        $namespace = preg_replace('/^\\\?App/', '', $namespace);
+        $namespace = preg_replace('/^\\\+/', '', $namespace);
 
-        $file = app_path('Models') . '/' . studly_case($table) . '.php';
+        $dir = str_replace('\\', '/', $namespace);
+        $dir = app_path($dir);
+
+        $file = $dir . '/' . studly_case($table) . '.php';
 
         if (file_exists($file)) {
-
-            $result = $this->choice("Model " . studly_case($table) . ".php was found. Overwrite?", array('n' => 'No', 'y' => 'Yes'), 'n', 3);
-
+            $table = studly_case($table);
+            $result = $this->choice("Model " . $table . ".php was found. Overwrite?", array('n' => 'No', 'y' => 'Yes'), 'n', 3);
             if ($result != 'y') {
                 exit;
             }
@@ -146,9 +161,10 @@ class MakeModelCommand extends Command
     protected function makeModel($table, $columns)
     {
         $modelName = studly_case($table);
+        $namespace = $this->getModelNamespace();
 
         $php  = "<?php\n\n";
-        $php .= "namespace App\Models;\n\n";
+        $php .= "namespace {$namespace};\n\n";
 
         if ($this->useSortable === true) {
             $php .= "use Rutorika\\Sortable\\SortableTrait;\n\n";

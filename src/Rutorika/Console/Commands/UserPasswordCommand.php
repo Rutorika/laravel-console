@@ -11,14 +11,6 @@ class UserPasswordCommand extends Command
 
     protected $description = 'Reset user password';
 
-    protected function getOptions()
-    {
-        return array(
-            array('email',        null, InputOption::VALUE_OPTIONAL, 'Find user by email', null),
-            array('new-password', null, InputOption::VALUE_OPTIONAL, 'New user password', null),
-        );
-    }
-
     /**
      * Execute the command.
      *
@@ -64,9 +56,16 @@ class UserPasswordCommand extends Command
         $user->password = \Hash::make($password);
         $user->save();
 
-        $this->line("\n");
         $this->line('Password update sucessfull');
         $this->line("\n");
+    }
+
+    protected function getOptions()
+    {
+        return array(
+            array('email',        null, InputOption::VALUE_OPTIONAL, 'Find user by email', null),
+            array('new-password', null, InputOption::VALUE_OPTIONAL, 'New user password', null),
+        );
     }
 }
 
