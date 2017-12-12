@@ -4,20 +4,61 @@ namespace Rutorika\Console\Commands;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
-use Rutorika\Console\UsersTrait;
+use Rutorika\Console\ConsoleTrait;
 
 class UserListCommand extends Command
 {
-    use UsersTrait;
+    use ConsoleTrait;
 
     protected $name = 'rutorika:user:list';
 
     protected $description = 'Список пользователей';
 
+    protected $signature = 'rutorika:user:list {--E|email= : User email or part of email} {--I|id= : User ID}';
+
+    protected $fields = [
+        'id',
+        'email'
+    ];
+
     public function handle()
     {
-        $users = $this->users()->all(['id', 'name', 'email'])->toArray();
+        $select = $this->getUserModel()->select($this->fields);
 
-        $this->table(['ID', 'Name', 'Email'], $users);
+        $email = $this->getEmailOption();
+
+        if (!empty($email)) {
+            if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $select->where('email', $email);
+            } else {
+                $select->whereRaw('email ilike ?', [$email . '%']);
+            }
+        }
+
+        $id = $this->getIdOption();
+
+        if (!empty($id)) {
+            $select->where('id', $id);
+        }
+
+        $result = $select->get()->toArray();
+
+        $this->table($this->fields, $result);
+    }
+
+    protected function getEmailOption()
+    {
+        $value = $this->option('email');
+
+        if (!empty($value) && preg_match('/^[a-z\d\._@-]+$/i', $value)) {
+            return $value;
+        }
+
+        return null;
+    }
+
+    protected function getIdOption()
+    {
+        return (int) $this->option('id');
     }
 }

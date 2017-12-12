@@ -13,7 +13,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands(
                 Commands\UserListCommand::class,
-                Commands\UserPasswordCommand::class
+                Commands\UserPasswordCommand::class,
+                Commands\MakeModelCommand::class
             );
         }
     }

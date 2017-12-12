@@ -2,6 +2,8 @@
 
 return [
 
-    'user_classname' => 'App\\Models\\Users'
+    'model_namespace' => 'App\\Models',
+
+    'user_classname' => 'App\\Models\\Users',
 
 ];
