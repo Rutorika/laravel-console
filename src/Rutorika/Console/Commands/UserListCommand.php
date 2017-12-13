@@ -23,7 +23,7 @@ class UserListCommand extends Command
 
     public function handle()
     {
-        $select = $this->getUserModel()->select($this->fields);
+        $select = $this->users()->select($this->fields);
 
         $email = $this->getEmailOption();
 

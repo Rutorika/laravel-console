@@ -25,5 +25,9 @@
                 "Rutorika\\Console\\ServiceProvider"
             ]
         }
+    },
+    "require-dev": {
+        "orchestra/testbench": "^3.5",
+        "phpunit/phpunit": "^6.5"
     }
 }

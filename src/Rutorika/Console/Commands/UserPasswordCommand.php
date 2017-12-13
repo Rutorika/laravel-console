@@ -4,9 +4,12 @@ namespace Rutorika\Console\Commands;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
+use Rutorika\Console\ConsoleTrait;
 
 class UserPasswordCommand extends Command
 {
+    use ConsoleTrait;
+
     protected $name = 'rutorika:user:password';
 
     protected $description = 'Reset user password';
@@ -26,7 +29,7 @@ class UserPasswordCommand extends Command
 
         if (filter_var($identity, FILTER_VALIDATE_EMAIL)) {
 
-            $user = \App\Models\Users::where('email', '=', $identity)->first();
+            $user = $this->users()->where('email', '=', $identity)->first();
 
         } else {
 
@@ -38,7 +41,7 @@ class UserPasswordCommand extends Command
                 return;
             }
 
-            $user = \App\Models\Users::where('id', '=', $identity)->first();
+            $user = $this->users()->where('id', '=', $identity)->first();
         }
 
         if (empty($user)) {

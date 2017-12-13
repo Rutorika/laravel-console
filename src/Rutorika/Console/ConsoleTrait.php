@@ -8,7 +8,7 @@ trait ConsoleTrait
      * 
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    protected function getUserModel()
+    protected function users()
     {
         $class = $this->getUserClassname();
 
@@ -25,11 +25,13 @@ trait ConsoleTrait
         $value = config()->get($param);
 
         if (empty($value)) {
-            abort(500, sprintf('The parameter "%s" was not found in the configuration. Try it now "php artisan config:clear".', $param));
+            $msg = sprintf('The parameter "%s" was not found in the configuration. Try it now "php artisan config:clear".', $param);
+            throw new ConsoleException($msg);
         }
 
         if (!class_exists($value)) {
-            abort(500, sprintd('Missing User Model Class "%s". Check the configuration parameter "%s"', $value, $param));
+            $msg = sprintf('Missing User Model Class "%s". Check the configuration parameter "%s"', $value, $param);
+            throw new ConsoleException($msg);
         }
 
         return $value;
@@ -45,11 +47,13 @@ trait ConsoleTrait
         $value = config()->get($param);
 
         if (empty($value)) {
-            abort(500, sprintf('The parameter "%s" was not found in the configuration. Try it now "php artisan config:clear".', $param));
+            $msg = sprintf('The parameter "%s" was not found in the configuration. Try it now "php artisan config:clear".', $param);
+            throw new ConsoleException($msg);
         }
 
         if (!preg_match('/^[a-z\d_\\\]{1,50}$/i', $value)) {
-            abort(500, sprintf('Incorect configuration parameter "%s" value "%s"', $param, $value));
+            $msg = sprintf('Incorect configuration parameter "%s" value "%s"', $param, $value);
+            throw new ConsoleException($msg);
         }
 
         return preg_replace(['/^\\\+/', '/\\\+$/'], ['', ''], $value);
