@@ -18,6 +18,8 @@ class MakeModelCommand extends Command
 
     protected $sortableGroupField = null;
 
+    protected $signature = 'rutorika:make-model {--T|table= : Database table}';
+
     /**
      * Execute the command.
      *
@@ -25,7 +27,11 @@ class MakeModelCommand extends Command
      */
     public function handle()
     {
-        $table = $this->getTableName();
+        $table = $this->getTableOption();
+
+        if (empty($table)) {
+            $table = $this->getTableName();
+        }
 
         $columns = $this->getColumns($table);
 
@@ -46,6 +52,17 @@ class MakeModelCommand extends Command
         }
 
         $this->line("\n");
+    }
+
+    protected function getTableOption()
+    {
+        $value = $this->option('table');
+
+        if (!empty($value) && preg_match('/^[a-z]{1}[a-z\d_]+$/i', $value)) {
+            return strtolower($value);
+        }
+
+        return null;
     }
 
     protected function writeModel($file, $source)

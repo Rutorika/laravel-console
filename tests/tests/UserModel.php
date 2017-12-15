@@ -1,5 +1,7 @@
 <?php
 
+namespace Rutorika\Console\Test;
+
 /**
  * Users
  *

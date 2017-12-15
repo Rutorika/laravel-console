@@ -23,6 +23,8 @@
 ]
 
 composer require rutorika/laravel-console:dev-master --prefer-source
+
+composer dump-autoload
 ```
 
 ## Установка
@@ -42,7 +44,7 @@ composer require rutorika/laravel-console:dev-master --prefer-source
 
 ```
 composer require rutorika/laravel-console:dev-master
-php artisan vendor:publish --provider="Rutorika\Console\ServiceProvider"
+php artisan vendor:publish --provider="Rutorika\Console\ConsoleServiceProvider"
 php artisan config:clear
 php artisan config:cache
 ```

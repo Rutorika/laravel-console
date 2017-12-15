@@ -9,25 +9,33 @@
             "email" : "dmitrij.demidovich@gmail.com"
         }
     ],
-    "autoload" : {
-        "psr-4" : {
-            "Rutorika\\Console\\" : "src"
-        }
-    },
     "require": {
         "php": ">=7.0.0",
         "laravel/framework": "5.5.*",
         "guzzlehttp/guzzle": ">=6.3"
     },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Rutorika\\Console\\ServiceProvider"
-            ]
-        }
-    },
     "require-dev": {
         "orchestra/testbench": "^3.5",
         "phpunit/phpunit": "^6.5"
+    },
+    "autoload" : {
+        "psr-4" : {
+            "Rutorika\\Console\\" : "src/Console/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Rutorika\\Console\\Test\\" : "tests/tests/"
+        },
+        "psr-0": {
+            "Rutorika\\Console\\Test\\Models\\" : ["tests/models/"]
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Rutorika\\Console\\ConsoleServiceProvider"
+            ]
+        }
     }
 }

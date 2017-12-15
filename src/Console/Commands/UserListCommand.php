@@ -29,7 +29,7 @@ class UserListCommand extends Command
 
         if (!empty($email)) {
             if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $select->where('email', $email);
+                $select->where('email', '=', $email);
             } else {
                 $select->whereRaw('email ilike ?', [$email . '%']);
             }
