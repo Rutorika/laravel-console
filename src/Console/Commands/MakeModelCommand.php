@@ -18,7 +18,7 @@ class MakeModelCommand extends Command
 
     protected $sortableGroupField = null;
 
-    protected $signature = 'rutorika:make-model {--T|table= : Database table} {--R|rewrite=0 : Rewrite existing model file}';
+    protected $signature = 'rutorika:make-model {--T|table= : Database table} {--R|rewrite : Rewrite existing model file}';
 
     /**
      * Execute the command.
