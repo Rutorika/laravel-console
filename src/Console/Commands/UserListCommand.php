@@ -28,10 +28,11 @@ class UserListCommand extends Command
         $email = $this->getEmailOption();
 
         if (!empty($email)) {
+            $email = strtolower($email);
             if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $select->where('email', '=', $email);
             } else {
-                $select->whereRaw('email ilike ?', [$email . '%']);
+                $select->whereRaw('email like ?', [$email . '%']);
             }
         }
 
