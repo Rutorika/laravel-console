@@ -10,6 +10,7 @@
 
 - **php >=7.0.0**
 - **php-sqlite >= 3**
+- **doctrine/dbal**
 - **laravel >= 5.5**
 
 

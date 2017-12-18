@@ -18,7 +18,7 @@ class MakeModelCommand extends Command
 
     protected $sortableGroupField = null;
 
-    protected $signature = 'rutorika:make-model {--T|table= : Database table}';
+    protected $signature = 'rutorika:make-model {--T|table= : Database table} {--R|rewrite=0 : Rewrite existing model file}';
 
     /**
      * Execute the command.
@@ -33,7 +33,7 @@ class MakeModelCommand extends Command
             $table = $this->getTableName();
         }
 
-        $columns = $this->getColumns($table);
+        $columns = $this->getTableColumns($table);
 
         $file = $this->getModelFile($table);
 
@@ -65,15 +65,9 @@ class MakeModelCommand extends Command
         return null;
     }
 
-    protected function writeModel($file, $source)
+    protected function getRewriteOption()
     {
-        $p = pathinfo($file);
-
-        if (!file_exists($p['dirname'])) {
-            mkdir($p['dirname'], 0777, true);
-        }
-
-        file_put_contents($file, $source);
+        return (bool) $this->option('rewrite');
     }
 
     protected function getTableName()
@@ -89,6 +83,61 @@ class MakeModelCommand extends Command
 
         return $table;
     }
+
+    protected function writeModel($file, $source)
+    {
+        $p = pathinfo($file);
+
+        if (!file_exists($p['dirname'])) {
+            \File::makeDirectory($p['dirname']);
+        }
+
+        file_put_contents($file, $source);
+    }
+
+    protected function getTableColumns($table)
+    {
+        $columns = Schema::getColumnListing($table);
+
+        if (empty($columns)) {
+            $this->error("Table {$table} not found or empty");
+            $this->line("\n");
+            exit;
+        }
+
+        $response = array();
+
+        foreach($columns as $row) {
+            $response[] = array(
+                'name' => $row,
+                'type' => \DB::connection()->getDoctrineColumn($table, $row)->getType()->getName()
+            );
+        }
+        
+        return $response;
+    }
+
+    // Невозможно получить мета на пустой таблице
+
+//    protected function getTableColumns($table)
+//    {
+//        $query = \DB::connection()->getPdo()->query("SELECT * FROM " . $table . " limit 0");
+//        $count = $query->columnCount();
+//
+//        $result = [];
+//
+//        for ($i = 0; $i < $count; $i++) {
+//            $m = $query->getColumnMeta($i);
+//            $result[] = [
+//                'name' => $m['name'],
+//                'type' => $m['native_type']
+//            ];
+//        }
+//
+//        dd($result);
+//
+//        return $result;
+//    }
 
     protected function setUseSortable($columns)
     {
@@ -135,24 +184,6 @@ class MakeModelCommand extends Command
         $this->setSortableGroupField($columns);
     }
 
-    protected function getColumns($table)
-    {
-        $query = \DB::connection()->getPdo()->query("SELECT * FROM " . $table . " limit 1");
-        $count = $query->columnCount();
-
-        $result = [];
-
-        for ($i = 0; $i < $count; $i++) {
-            $m = $query->getColumnMeta($i);
-            $result[] = [
-                'name' => $m['name'],
-                'type' => $m['native_type']
-            ];
-        }
-
-        return $result;
-    }
-
     protected function getModelFile($table)
     {
         $namespace = $this->getModelNamespace();
@@ -163,6 +194,10 @@ class MakeModelCommand extends Command
         $dir = app_path($dir);
 
         $file = $dir . '/' . studly_case($table) . '.php';
+
+        if ($this->getRewriteOption() === true) {
+            return $file;
+        }
 
         if (file_exists($file)) {
             $table = studly_case($table);
@@ -187,7 +222,7 @@ class MakeModelCommand extends Command
             $php .= "use Rutorika\\Sortable\\SortableTrait;\n\n";
         }
 
-        $php .= $this->makeModelHeader($table, $columns);
+        $php .= $this->makeHeaderSection($table, $columns);
         $php .= "class {$modelName} extends \Eloquent\n";
         $php .= "{\n";
 
@@ -196,9 +231,9 @@ class MakeModelCommand extends Command
         }
 
         $php .= "    protected \$table = '{$table}';\n";
-        $php .= $this->makeModelFillable($columns);
-        $php .= $this->makeModelGuarded($columns);
-        $php .= $this->makeModelTimestamps($columns);
+        $php .= $this->makeFillableSection($columns);
+        $php .= $this->makeGuardedSection($columns);
+        $php .= $this->makeTimestampsSection($columns);
 
         if ($this->useSortable === true AND $this->sortableGroupField !== null) {
             $php .= "\n";
@@ -211,7 +246,7 @@ class MakeModelCommand extends Command
         return $php;
     }
 
-    protected function makeModelHeader($table, $columns)
+    protected function makeHeaderSection($table, $columns)
     {
         $modelName = studly_case($table);
 
@@ -233,7 +268,7 @@ class MakeModelCommand extends Command
         return $php;
     }
 
-    protected function makeModelFillable($columns)
+    protected function makeFillableSection($columns)
     {
         $php  = "\n";
         $php .= "    protected \$fillable = [\n";
@@ -249,7 +284,7 @@ class MakeModelCommand extends Command
         return $php;
     }
 
-    protected function makeModelGuarded($columns)
+    protected function makeGuardedSection($columns)
     {
         $php  = "\n";
         $php .= "    protected \$guarded = [";
@@ -266,7 +301,7 @@ class MakeModelCommand extends Command
         return $php;
     }
 
-    protected function makeModelTimestamps($columns)
+    protected function makeTimestampsSection($columns)
     {
         $timestamps = false;
 

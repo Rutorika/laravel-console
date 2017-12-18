@@ -2,7 +2,7 @@
 
 return [
 
-    'model_namespace' => 'Rutorika\\Console\\Test\\Models',
+    'model_namespace' => 'App\\Models',
 
     'user_classname' => 'Rutorika\\Console\\Test\\UserModel',
 

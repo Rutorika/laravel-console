@@ -35,7 +35,8 @@ class ConsoleTestBase extends TestCase
 
     protected function getEnvironmentSetUp($app)
     {
-        $app['path.base'] = __DIR__ . '/../../src';
+        $base = realpath(__DIR__ . '/..');
+        $app->setBasePath($base);
 
         $app['config']->set('database.default', 'testbench');
         $app['config']->set('database.connections.testbench', [

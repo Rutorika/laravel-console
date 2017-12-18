@@ -6,35 +6,69 @@ use Rutorika\Console\Commands\MakeModelCommand;
 
 class MakeModelCommandTest extends ConsoleTestBase
 {
-    public function testConfig()
+    public function test_config()
     {
         $c = config()->get('rutorika.console');
 
-        $this->assertNotEmpty($c['model_namespace'], 'Missing model_namespace config parameter');
+        $namespace = empty($c['model_namespace']) ? null : $c['model_namespace'];
+
+        $this->assertNotEmpty($namespace, 'Missing model_namespace config parameter');
     }
 
-//    public function testDefaultCommand()
-//    {
-//        $this->artisan('rutorika:make-model', ['--table' => 'users']);
-//
-//        $file = $this->getModelPath('Users');
-//
-//        $this->seeFileWasCreated($file);
-//
-//        $this->removeCreatedModel('Users');
-//    }
-
-    protected function removeCreatedModel($class)
+    public function test_command_with_options_table_and_rewrite()
     {
-        $file = $this->getModelPath($class);
+        $this->cleanModelDir();
 
-        if (file_exists($file)) {
-            unlink($file);
+        $command = $this->runArtisanCommand(MakeModelCommand::class, ['--table' => 'users', '--rewrite' => '1']);
+        $output  = $command->getDisplay();
+
+        $file = $this->getModelDir() . '/Users.php';
+
+        $this->assertFileExists($file);
+
+        $data = file_get_contents($file);
+        $this->assertEquals($this->itIsModel($data), true);
+    }
+
+    protected function getModelDir()
+    {
+        return app_path('Models');
+    }
+
+    protected function cleanModelDir()
+    {
+        $dir = $this->getModelDir();
+
+        if (!file_exists($dir)) {
+            \File::makeDirectory($dir);
+            return;
+        }
+
+//        \File::deleteDirectory($dir);
+//        \File::makeDirectory($dir);
+
+//        $file = new \Symfony\Component\Finder\SplFileInfo();
+//        $file->getPath();
+//        $file->getPathname();
+//        $file->getPathInfo();
+
+        $files = \File::allFiles($dir);
+        foreach ($files as $file) {
+            $data = file_get_contents($file->getPathname());
+            if ($this->itIsModel($data)) {
+                \File::delete($file->getPathname());
+            }
         }
     }
 
-    protected function getModelPath($class)
+    protected function itIsModel($content)
     {
-        return __DIR__ . '/../models' . '/' . $class . '.php';
+        if (preg_match('/class\s+[a-zA-Z0-9]+\s+extends/s', $content) &&
+            preg_match('/protected\s*\$table\s*=/', $content))
+        {
+            return true;
+        }
+
+        return false;
     }
 }

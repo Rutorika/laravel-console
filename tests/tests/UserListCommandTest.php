@@ -34,9 +34,7 @@ class UserListCommandTest extends ConsoleTestBase
         $this->seedUsers();
 
         $command = $this->runArtisanCommand(UserListCommand::class);
-        $command->execute([]);
-
-        $output = $command->getDisplay();
+        $output  = $command->getDisplay();
 
         $this->assertContains('first@email.ru', $output);
         $this->assertContains('second@email.ru', $output);
