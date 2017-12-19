@@ -10,7 +10,6 @@
         }
     ],
     "require": {
-        "php": ">=7.0.0",
         "laravel/framework": "5.5.*",
         "guzzlehttp/guzzle": ">=6.3",
         "doctrine/dbal": "^2.6"
@@ -29,7 +28,7 @@
             "Rutorika\\Console\\Test\\" : "tests/tests/"
         },
         "psr-0": {
-            "Rutorika\\Console\\Test\\Models\\" : ["tests/models/"]
+            "Rutorika\\Console\\Test\\Models\\" : ["tests/app/Models/"]
         }
     },
     "extra": {
