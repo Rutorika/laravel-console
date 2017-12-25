@@ -8,6 +8,27 @@ use Rutorika\Console\ConsoleServiceProvider;
 
 class ConsoleTestBase extends TestCase
 {
+    protected function getEnvironmentSetUp($app)
+    {
+        $base = realpath(__DIR__ . '/..');
+        $app->setBasePath($base);
+
+        $app['config']->set('database.default', 'testbench');
+        $app['config']->set('database.connections.testbench', [
+            'driver'   => 'sqlite',
+            'database' => ':memory:',
+            'prefix'   => '',
+        ]);
+        $app['config']->set('rutorika.console', include __DIR__ . '/../config.php');
+    }
+
+    protected function getPackageProviders($app)
+    {
+        return [
+            ConsoleServiceProvider::class
+        ];
+    }
+
     public function setUp()
     {
         parent::setUp();
@@ -31,29 +52,6 @@ class ConsoleTestBase extends TestCase
         ]);
 
         parent::tearDown();
-    }
-
-    protected function getEnvironmentSetUp($app)
-    {
-        $base = realpath(__DIR__ . '/..');
-        $app->setBasePath($base);
-
-        $app['config']->set('database.default', 'testbench');
-        $app['config']->set('database.connections.testbench', [
-            'driver' => 'sqlite',
-            'database' => ':memory:',
-            'prefix' => '',
-        ]);
-        $app['config']->set('rutorika.console', 
-            include __DIR__ . '/../config.php'
-        );
-    }
-
-    protected function getPackageProviders($app)
-    {
-        return [
-            ConsoleServiceProvider::class
-        ];
     }
 
     /**
