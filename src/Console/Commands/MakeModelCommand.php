@@ -144,7 +144,7 @@ class MakeModelCommand extends Command
         foreach ($columns as $row) {
             if ($row['name'] == 'position') {
 
-                if (!class_exists('Rutorika\\Sortable\\SortableTrait')) {
+                if (!class_exists('Rutorika\\Sortable\\SortableServiceProvider')) {
                     $this->error("Found field \"position\" but not found rutorika-sortable package. Skip enabled sortable");
                     return;
                 }
