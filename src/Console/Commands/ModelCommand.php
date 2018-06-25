@@ -6,11 +6,11 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Schema;
 use Rutorika\Console\ConsoleTrait;
 
-class MakeModelCommand extends Command
+class ModelCommand extends Command
 {
     use ConsoleTrait;
 
-    protected $name = 'rutorika:make-model';
+    protected $name = 'rutorika:model';
 
     protected $description = 'Create model file from database table';
 
@@ -18,7 +18,7 @@ class MakeModelCommand extends Command
 
     protected $sortableGroupField = null;
 
-    protected $signature = 'rutorika:make-model {--T|table= : Database table} {--R|rewrite : Rewrite existing model file}';
+    protected $signature = 'rutorika:model {--T|table= : Database table} {--R|rewrite : Rewrite existing model file}';
 
     /**
      * Execute the command.

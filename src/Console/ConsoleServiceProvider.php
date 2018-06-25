@@ -14,7 +14,8 @@ class ConsoleServiceProvider extends \Illuminate\Support\ServiceProvider
             $this->commands(
                 Commands\UserListCommand::class,
                 Commands\UserPasswordCommand::class,
-                Commands\MakeModelCommand::class
+                Commands\ModelCommand::class,
+                Commands\EmailTestCommand::class
             );
         }
     }
