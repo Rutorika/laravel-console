@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Commands;
+namespace Rutorika\Console\Commands;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
@@ -20,9 +20,9 @@ use Symfony\Component\Console\Input\InputArgument;
  * php artisan rutorika:db-views-update all
  */
 
-class DbviewsUpdateCommand extends Command
+class DbViewsUpdateCommand extends Command
 {
-    protected $name = 'rutorika:db-views-update';
+    protected $name = 'rutorika:dbviews:update';
 
     protected $description = 'Обновление представлений Postgresql';
 
@@ -32,45 +32,38 @@ class DbviewsUpdateCommand extends Command
     {
         $this->line("");
 
+        $dir = $this->getViewsDir();
         $param = $this->getFileArgument();
 
         // Список миграций
 
         if (empty($param) OR $param == 'list') {
-
-            $this->printMigrationList();
+            $this->printMigrationList($dir);
 
         // Выполнение всех миграций
 
         } else if ($param == 'all') {
-
-            $files = $this->getMigrationFiles();
+            $files = $this->getMigrationFiles($dir);
             foreach ($files as $file) {
-                $this->migrateFile($file);
+                $this->runSqlfile("${dir}/${file}");
             }
 
         // Выполнение одной миграции
 
         } else {
-
-            $this->migrateFile($param);
+            $this->runSqlfile("${dir}/${param}");
         }
     }
 
-    protected function migrateFile($file)
+    protected function runSqlfile($file)
     {
         $this->info("Migrate file: " . $file);
 
-        $file = $this->getFilepath($file);
-        $src  = file_get_contents($file);
+        $src = file_get_contents($file);
 
         if (preg_match('/(^|\s+)(create|alter|drop)(\s+table)/iu', $src, $match)) {
             $this->error("Найдено выражение (create|alter|drop)");
             $this->error("Пропуск миграции");
-
-        } else if (preg_match('/%CURRENCY_(LOWER|UPPER)_CODE%/', $src)) {
-            $this->info("Migrate type: currency");
-            $this->migrateCurrency($src);
 
         } else {
             $this->migrate($src);
@@ -79,26 +72,9 @@ class DbviewsUpdateCommand extends Command
         $this->line("");
     }
 
-    protected function getFileArgument()
+    protected function printMigrationList($dir)
     {
-        $file = $this->argument('file');
-
-        if ($file == 'none') {
-            return;
-        }
-
-        if (preg_match('/([^a-zA-Z0-9_.]+|\.\.)/', $file)) {
-            $this->error("Некорректное имя файла " . $file);
-            $this->line("");
-            return;
-        }
-
-        return $file;
-    }
-
-    protected function printMigrationList()
-    {
-        $files = $this->getMigrationFiles();
+        $files = $this->getMigrationFiles($dir);
 
         if (empty($files)) {
             return;
@@ -124,71 +100,103 @@ class DbviewsUpdateCommand extends Command
 
     protected function migrate($src)
     {
-        $sql = str_replace('%APP_CURRENCY_LOWER_CODE%', strtolower(\Currency::app()), $src);
-        $sql = str_replace('%APP_CURRENCY_UPPER_CODE%', strtoupper(\Currency::app()), $sql);
-        $sql = explode(";", $sql);
+        $sql = explode(";", $src);
 
         foreach ($sql as $sqlQuery) {
+
+            $sqlQuery = trim($sqlQuery);
 
             if (empty($sqlQuery)) {
                 continue;
             }
 
-            $sqlQuery = trim($sqlQuery);
             \DB::statement($sqlQuery);
         }
     }
 
-    protected function migrateCurrency($src)
+    protected function getViewsDir()
     {
-        $sql = explode(";", $src);
+        $path = config()->get('rutorika.console.dbviews_path');
 
-        $currencies = \Currency::all();
-
-        foreach ($currencies as $code) {
-
-            $upperCode = strtoupper($code);
-            $lowerCode = strtolower($code);
-
-            foreach ($sql as $sqlQuery) {
-
-                $sqlQuery = trim($sqlQuery);
-                if (empty($sqlQuery)) {
-                    continue;
-                }
-                
-                $sqlQuery = str_replace('%CURRENCY_LOWER_CODE%', $lowerCode, $sqlQuery);
-                $sqlQuery = str_replace('%CURRENCY_UPPER_CODE%', $upperCode, $sqlQuery);
-
-                \DB::select(\DB::raw($sqlQuery));
-
-            }
+        if (empty($path)) {
+            $this->line("");
+            $this->error("В конфигурационнам файле rutorika/console.php не задан путь к директории с представлениями базы данных dbviews_path");
+            $this->line("");
+            exit;
         }
+
+        if (!file_exists($path)) {
+            $this->line("");
+            $this->error("Отсутствует директория представлений " . $path);
+            $this->line("");
+            exit;
+        }
+
+        if (!is_dir($path)) {
+            $this->line("");
+            $this->error($path . " не директория");
+            $this->line("");
+            exit;
+        }
+
+        return $path;
     }
 
-    protected function getMigrationFiles()
+    protected function getFileArgument()
     {
-        $path  = app_path() . '/../database/views';
-        $files = scrooge_read_dir($path, '*.sql');
+        $file = $this->argument('file');
+
+        if ($file == 'none') {
+            return;
+        }
+
+        if (preg_match('/([^a-zA-Z0-9_.]+|\.\.)/', $file)) {
+            $this->error("Некорректное имя файла " . $file);
+            $this->line("");
+            return;
+        }
+
+        return $file;
+    }
+
+    protected function getMigrationFiles($dir)
+    {
+        $files = $this->_readDir($dir, '*.sql');
 
         if (empty($files)) {
-            $this->info("Миграции в директории {$path} не найдены");
+            $this->info("Миграции в директории {$dir} не найдены");
             $this->line("");
         }
 
         return $files;
     }
 
-    protected function getFilepath($file)
+    /**
+     * Копия функции Rutorika\Functions\Files::readDir()
+     */
+    private function _readDir($dir, $masq = false)
     {
-        $file = app_path() . '/../database/views/' . $file;
-
-        if (!file_exists($file)) {
-            $this->error("Файл {$file} не найден");
-            $this->line("");
-            exit;
+        if (!file_exists($dir)) {
+            return array();
         }
 
-        return $file;
+        $list = scandir($dir);
+        if (empty($list)) {
+            return array();
+        }
+
+        $search  = array('.',  '*');
+        $replace = array('\.', '.*');
+        $masq    = $masq ? str_replace($search, $replace, $masq) : '[^.]+.*';
+        $masq    = '/^' . $masq . '$/u';
+
+        $return = array();
+        foreach ($list as $k => $v) {
+            if (preg_match($masq, $v)) {
+                $return[] = $v;
+            }
+        }
+
+        return $return;
     }
 }

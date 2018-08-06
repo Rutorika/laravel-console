@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Commands;
+namespace Rutorika\Console\Commands;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
