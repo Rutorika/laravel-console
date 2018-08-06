@@ -6,13 +6,13 @@ use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
-class TestingDbCommand extends Command
+class DbTestingCommand extends Command
 {
-    protected $name = 'rutorika:testing-db';
+    protected $name = 'rutorika:db:testing';
 
     protected $description = 'Пересоздание тестовой базы .env.testing на основе .env';
 
-    protected $signature = 'scrooge:testing-db {--seed}';
+    protected $signature = 'rutorika:db:testing {--seed}';
 
     public function handle()
     {

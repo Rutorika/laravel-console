@@ -16,8 +16,8 @@ class ConsoleServiceProvider extends \Illuminate\Support\ServiceProvider
                 Commands\UserPasswordCommand::class,
                 Commands\ModelCommand::class,
                 Commands\EmailTestCommand::class,
-                Commands\DbViewsUpdateCommand::class,
-                Commands\TestingDbCommand::class
+                Commands\DbViewsCommand::class,
+                Commands\DbTestingCommand::class
             );
         }
     }

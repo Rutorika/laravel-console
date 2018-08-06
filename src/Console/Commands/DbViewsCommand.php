@@ -20,13 +20,13 @@ use Symfony\Component\Console\Input\InputArgument;
  * php artisan rutorika:db-views-update all
  */
 
-class DbViewsUpdateCommand extends Command
+class DbViewsCommand extends Command
 {
-    protected $name = 'rutorika:dbviews:update';
+    protected $name = 'rutorika:db:views';
 
     protected $description = 'Обновление представлений Postgresql';
 
-    protected $signature = 'rutorika:dbviews:update {file=none}';
+    protected $signature = 'rutorika:db:views {file=none}';
 
     public function handle()
     {
