@@ -24,7 +24,7 @@ class DbViewsCommand extends Command
 {
     protected $name = 'rutorika:db:views';
 
-    protected $description = 'Обновление представлений Postgresql';
+    protected $description = 'Обновление представлений Postgresql или Mysql';
 
     protected $signature = 'rutorika:db:views {file=none}';
 
