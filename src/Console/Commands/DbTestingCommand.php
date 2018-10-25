@@ -168,7 +168,10 @@ class DbTestingCommand extends Command
 
         // Схема
 
-        $cmd = vsprintf("pg_dump -O -s -h %s -U %s %s > %s", [
+        // Дамп только схемы
+        // $cmd = vsprintf("pg_dump -O -s -h %s -U %s %s > %s", [
+
+        $cmd = vsprintf("pg_dump -O -h %s -U %s %s > %s", [
             escapeshellarg($env['host']),
             escapeshellarg($env['user']),
             escapeshellarg($env['db']),
