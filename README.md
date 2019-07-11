@@ -2,10 +2,12 @@
 
 Консольные команды:
 
+* **rutorika:db:testing** - генерация тестовой базы
+* **rutorika:email:test** - тестирование отправки email
+* **rutorika:model** - генерация модели
 * **rutorika:user:list** - просмотр пользователей
 * **rutorika:user:password** - смена пароля пользователя
-* **rutorika:db-view** - список представлений базы данных
-* **rutroika:db-view:update** - обновление представлений базы данных
+* **rutorika:db:views** - обновление представлений Postgresql или Mysql
 
 Зависимости:
 
@@ -56,13 +58,6 @@ php artisan config:cache
 
 * **user_classname** - класс модели пользователей
 
-
-## Отправка и ротация отчетов
-
-Для отправки и ротации отчетов в crontab необходимо добавить вызовы команд:
-
-* php artisan rutorika:report
-* php artisan rutorika:report-rotate --maxlife=30
 
 
 
