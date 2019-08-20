@@ -2,12 +2,14 @@
 
 Консольные команды:
 
-* **rutorika:db:testing** - генерация тестовой базы
-* **rutorika:email:test** - тестирование отправки email
-* **rutorika:model** - генерация модели
-* **rutorika:user:list** - просмотр пользователей
-* **rutorika:user:password** - смена пароля пользователя
-* **rutorika:db:views** - обновление представлений Postgresql или Mysql
+```
+rutorika:db:testing    - генерация тестовой базы
+rutorika:email:test    - тестирование отправки email
+rutorika:model         - генерация модели
+rutorika:user:list     - просмотр пользователей
+rutorika:user:password - смена пароля пользователя
+rutorika:db:views      - обновление представлений Postgresql или Mysql
+```
 
 Зависимости:
 
