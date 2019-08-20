@@ -18,22 +18,6 @@ rutorika:db:views      - обновление представлений Postgre
 * **doctrine/dbal**
 * **laravel >= 5.5**
 
-
-## Разработка
-
-```
-"repositories": [
-    {
-        "type": "path",
-        "url": "/srv/www/rutorika-console"
-    }
-]
-
-composer require rutorika/laravel-console:dev-master --prefer-source
-
-composer dump-autoload
-```
-
 ## Установка
 
 Добавить в **composer.json** репозиторий пакета:
@@ -42,7 +26,7 @@ composer dump-autoload
 "repositories": [
       {
         "type": "vcs",
-        "url": "git@bitbucket.org:rutorika/laravel-console.git"
+        "url": "git@github.com:Rutorika/laravel-console.git"
       }
 ]
 ```
@@ -56,9 +40,7 @@ php artisan config:clear
 php artisan config:cache
 ```
 
-В файлe конфигурации rutorika/console.php настроить параметр:
-
-* **user_classname** - класс модели пользователей
+В файлe конфигурации *rutorika/console.php* настроить параметр **user_classname**
 
 
 
