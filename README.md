@@ -2,12 +2,14 @@
 
 Консольные команды:
 
-* **rutorika:db:testing** - генерация тестовой базы
-* **rutorika:email:test** - тестирование отправки email
-* **rutorika:model** - генерация модели
-* **rutorika:user:list** - просмотр пользователей
-* **rutorika:user:password** - смена пароля пользователя
-* **rutorika:db:views** - обновление представлений Postgresql или Mysql
+```
+rutorika:db:testing    - генерация тестовой базы
+rutorika:email:test    - тестирование отправки email
+rutorika:model         - генерация модели
+rutorika:user:list     - просмотр пользователей
+rutorika:user:password - смена пароля пользователя
+rutorika:db:views      - обновление представлений Postgresql или Mysql
+```
 
 Зависимости:
 
@@ -15,22 +17,6 @@
 * **php-sqlite >= 3**
 * **doctrine/dbal**
 * **laravel >= 5.5**
-
-
-## Разработка
-
-```
-"repositories": [
-    {
-        "type": "path",
-        "url": "/srv/www/rutorika-console"
-    }
-]
-
-composer require rutorika/laravel-console:dev-master --prefer-source
-
-composer dump-autoload
-```
 
 ## Установка
 
@@ -40,7 +26,7 @@ composer dump-autoload
 "repositories": [
       {
         "type": "vcs",
-        "url": "git@bitbucket.org:rutorika/laravel-console.git"
+        "url": "git@github.com:Rutorika/laravel-console.git"
       }
 ]
 ```
@@ -54,9 +40,7 @@ php artisan config:clear
 php artisan config:cache
 ```
 
-В файлe конфигурации rutorika/console.php настроить параметр:
-
-* **user_classname** - класс модели пользователей
+В файлe конфигурации *rutorika/console.php* настроить параметр **user_classname**
 
 
 
