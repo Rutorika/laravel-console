@@ -1,7 +1,7 @@
 {
     "name" : "rutorika/laravel-console",
     "description" : "Console commands",
-    "keywords": ["laravel", "report", "slack", "laravel55"],
+    "keywords": ["laravel", "report", "slack", "laravel6"],
     "license" : "MIT",
     "authors" : [
         {
@@ -9,15 +9,6 @@
             "email" : "dmitrij.demidovich@gmail.com"
         }
     ],
-    "require": {
-        "laravel/framework": "5.*",
-        "guzzlehttp/guzzle": ">=6.3",
-        "doctrine/dbal": "^2.6"
-    },
-    "require-dev": {
-        "orchestra/testbench": "^3.5",
-        "phpunit/phpunit": "^6.5"
-    },
     "autoload" : {
         "psr-4" : {
             "Rutorika\\Console\\" : "src/Console/"
@@ -37,5 +28,14 @@
                 "Rutorika\\Console\\ConsoleServiceProvider"
             ]
         }
+    },
+    "require": {
+        "laravel/framework": "6.*",
+        "guzzlehttp/guzzle": ">=6.3",
+        "doctrine/dbal": "^2.9"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^4.0",
+        "phpunit/phpunit": "^8.3"
     }
 }
