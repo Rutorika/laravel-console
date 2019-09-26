@@ -48,7 +48,7 @@ class ModelCommand extends Command
         if ($this->useSortable) {
             $this->line("\n");
             $this->line("Warning!");
-            $this->line("The model has sortable. Add App\\Models\\" . studly_case($table) . "::class to config/sortable.php");
+            $this->line("The model has sortable. Add App\\Models\\" . \Str::studly($table) . "::class to config/sortable.php");
         }
 
         $this->line("\n");
@@ -169,7 +169,7 @@ class ModelCommand extends Command
 
         $field = $this->ask("Enter group field");
         $field = trim($field);
-        $field = snake_case($field);
+        $field = \Str::snake($field);
 
         foreach ($columns as $row) {
             if ($row['name'] == $field) {
@@ -193,14 +193,14 @@ class ModelCommand extends Command
         $dir = str_replace('\\', '/', $namespace);
         $dir = app_path($dir);
 
-        $file = $dir . '/' . studly_case($table) . '.php';
+        $file = $dir . '/' . \Str::studly($table) . '.php';
 
         if ($this->getRewriteOption() === true) {
             return $file;
         }
 
         if (file_exists($file)) {
-            $table = studly_case($table);
+            $table = \Str::studly($table);
             $result = $this->choice("Model " . $table . ".php was found. Overwrite?", array('n' => 'No', 'y' => 'Yes'), 'n', 3);
             if ($result != 'y') {
                 exit;
@@ -212,7 +212,7 @@ class ModelCommand extends Command
 
     protected function makeModel($table, $columns)
     {
-        $modelName = studly_case($table);
+        $modelName = \Str::studly($table);
         $namespace = $this->getModelNamespace();
 
         $php  = "<?php\n\n";
@@ -248,7 +248,7 @@ class ModelCommand extends Command
 
     protected function makeHeaderSection($table, $columns)
     {
-        $modelName = studly_case($table);
+        $modelName = \Str::studly($table);
 
         $php  = "/**\n";
         $php .= " * {$modelName}\n";
