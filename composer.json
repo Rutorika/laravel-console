@@ -3,6 +3,7 @@
     "description" : "Console commands",
     "keywords": ["laravel", "report", "slack", "laravel55"],
     "license" : "MIT",
+    "version" : "5.0",
     "authors" : [
         {
             "name" : "Dmitry Demidovich",
