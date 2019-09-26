@@ -11,36 +11,31 @@ rutorika:user:password - смена пароля пользователя
 rutorika:db:views      - обновление представлений Postgresql или Mysql
 ```
 
-Зависимости:
-
-* **php >=7.0.0**
-* **php-sqlite >= 3**
-* **doctrine/dbal**
-* **laravel >= 5.5**
-
 ## Установка
 
-Добавить в **composer.json** репозиторий пакета:
+laravel 6
 
 ```
-"repositories": [
-      {
-        "type": "vcs",
-        "url": "git@github.com:Rutorika/laravel-console.git"
-      }
-]
+composer require rutorika/laravel-console:0.6.0
 ```
 
-Выполнить команды:
+laravel 5
 
 ```
-composer require rutorika/laravel-console:dev-master
+composer require rutorika/laravel-console:0.5.0
+```
+
+```
 php artisan vendor:publish --provider="Rutorika\Console\ConsoleServiceProvider"
 php artisan config:clear
 php artisan config:cache
 ```
 
-В файлe конфигурации *rutorika/console.php* настроить параметр **user_classname**
+В файлe конфигурации *rutorika/console.php* настроить параметры:
+
+* **user_classname** модель пользователя
+* **model_namespace** пространство имен моделей
+* **dbviews_path** директория с представлениями
 
 
 
